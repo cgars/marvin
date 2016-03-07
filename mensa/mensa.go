@@ -20,13 +20,14 @@ type Meal struct {
     Notes []string
 }
 
-func (mensa *Client) Meals(canteen string, day string) ([]Meal, error) {
+func (mensa *Client) Meals(canteen string, day time.Time) ([]Meal, error) {
     client := &http.Client{}
 
     meals := make([]Meal, 0)
 
-	url := fmt.Sprintf("%s/canteens/%s/days/%s/meals",
-                        mensa.Address, canteen, day)
+	url := fmt.Sprintf("%s/canteens/%s/days/%d-%02d-%02d/meals",
+                        mensa.Address, canteen,
+                        day.Year(), day.Month(), day.Day())
 
 	res, err := client.Get(url)
 	if err != nil {
@@ -48,11 +49,13 @@ func (mensa *Client) Meals(canteen string, day string) ([]Meal, error) {
 }
 
 func (mensa *Client) MealsForToday(canteen string) ([]Meal, error) {
-    now := time.Now()
+    return mensa.Meals(canteen, time.Now())
+}
 
-    day := fmt.Sprintf("%d-%02d-%02d", now.Year(), now.Month(), now.Day())
-    fmt.Printf("%s\n", day)
-    return mensa.Meals(canteen, day)
+func (mensa *Client) MealsForTomorrow(canteen string) ([]Meal, error) {
+    now := time.Now()
+    tomorrow := now.AddDate(0, 0, 1)
+    return mensa.Meals(canteen, tomorrow)
 }
 
 func Emojify(notes []string) []string {
@@ -73,17 +76,9 @@ func Emojify(notes []string) []string {
     return notes
 }
 
-func (mensa *Client) MealsForTomorrow(canteen string) ([]Meal, error) {
-    now := time.Now()
-    
-    day := fmt.Sprintf("%d-%02d-%02d", now.Year(), now.Month(), now.Day()+1)
-    fmt.Printf("%s\n", day)
-    return mensa.Meals(canteen, day)
-}
-
 func main() {
     client := &Client{Address: "http://openmensa.org/api/v2"}
-    res, err := client.Meals("134", "2016-03-04")
+    res, err := client.Meals("134", time.Now())
     if err != nil {
         println(err)
     }
