@@ -55,6 +55,21 @@ func (mensa *Client) MealsForToday(canteen string) ([]Meal, error) {
     return mensa.Meals(canteen, day)
 }
 
+func Emojify(notes []string) []string {
+    emojis := map[string]string {
+        "Gericht mit Schweinefleisch": "🐖",
+    }   
+    
+    for i, note := range notes {
+        emoji, ok := emojis[note]
+        if ok {
+            notes[i] = emoji
+        }
+    } 
+    
+    return notes
+}
+
 func main() {
     client := &Client{Address: "http://openmensa.org/api/v2"}
     res, err := client.Meals("134", "2016-03-04")

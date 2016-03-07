@@ -42,7 +42,7 @@ func (b *Bot) onPrivMessage(conn *irc.Conn, line *irc.Line) {
                  strings.HasPrefix(category, "Aktionsessen")) {
                 continue
             }
-            notes := strings.Join(meal.Notes, ", ")
+            notes := strings.Join(mensa.Emojify(meal.Notes), ", ")
             conn.Privmsgf(target, "%s [%s]", meal.Name, notes)
         }
     }
