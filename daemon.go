@@ -28,9 +28,14 @@ func (b *Bot) onPrivMessage(conn *irc.Conn, line *irc.Line) {
     
     if strings.HasPrefix(text, "mensa") {
         mc := &mensa.Client{Address: "http://openmensa.org/api/v2"}
-        meals, _ := mc.MealsForToday("134")
-        // ignored error for now
         
+        var meals []mensa.Meal
+        if (strings.Contains(text, "tomorrow")) {
+            meals, _ = mc.MealsForTomorrow("134")
+            // ignored error for now
+        } else {
+            meals, _ = mc.MealsForToday("134")
+        }
         if len(meals) == 0 {
             conn.Privmsgf(target, "No milk today, my love has gone away...")
             return
