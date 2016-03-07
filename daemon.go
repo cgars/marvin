@@ -6,7 +6,7 @@ import (
     "strings"
 
     irc "github.com/fluffle/goirc/client"
-    "github.com/gnode/marvin/mensa"
+    "github.com/g-node/marvin/mensa"
 )
 
 type Bot struct {    
