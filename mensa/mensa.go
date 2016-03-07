@@ -49,7 +49,7 @@ func (mensa *Client) Meals(canteen string, day string) ([]Meal, error) {
 
 func (mensa *Client) MealsForToday(canteen string) ([]Meal, error) {
     now := time.Now()
-    
+
     day := fmt.Sprintf("%d-%02d-%02d", now.Year(), now.Month(), now.Day())
     fmt.Printf("%s\n", day)
     return mensa.Meals(canteen, day)
@@ -68,6 +68,14 @@ func Emojify(notes []string) []string {
     } 
     
     return notes
+}
+
+func (mensa *Client) MealsForTomorrow(canteen string) ([]Meal, error) {
+    now := time.Now()
+    
+    day := fmt.Sprintf("%d-%02d-%02d", now.Year(), now.Month(), now.Day()+1)
+    fmt.Printf("%s\n", day)
+    return mensa.Meals(canteen, day)
 }
 
 func main() {
