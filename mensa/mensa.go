@@ -58,6 +58,9 @@ func (mensa *Client) MealsForToday(canteen string) ([]Meal, error) {
 func Emojify(notes []string) []string {
     emojis := map[string]string {
         "Gericht mit Schweinefleisch": "🐖",
+        "mit Fleisch": "🍖",
+        "veganes Gericht": "🌿",
+        "fleischloses Gericht": "🍄",
     }   
     
     for i, note := range notes {
