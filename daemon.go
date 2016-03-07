@@ -37,7 +37,9 @@ func (b *Bot) onPrivMessage(conn *irc.Conn, line *irc.Line) {
         }
         
         for _, meal := range meals {
-            if !strings.HasPrefix(meal.Category, "Tagesgericht") {
+            category := meal.Category
+            if !(strings.HasPrefix(category, "Tagesgericht") ||
+                 strings.HasPrefix(category, "Aktionsessen")) {
                 continue
             }
             notes := strings.Join(meal.Notes, ", ")
