@@ -6,7 +6,7 @@ import (
     "strings"
 
     irc "github.com/fluffle/goirc/client"
-    "github.com/g-node/marvin/mensa"
+    "github.com/g-node/marvin/mensa"    
 )
 
 type Bot struct {    
@@ -47,8 +47,16 @@ func (b *Bot) onPrivMessage(conn *irc.Conn, line *irc.Line) {
                  strings.HasPrefix(category, "Aktionsessen")) {
                 continue
             }
+            var prices []string 
+            for key, value := range meal.Prices {
+                if value != 0.{
+                    prices = append(prices,fmt.Sprintf("%s:%.2f€",
+                                    strings.Title(key),value))
+                }                
+            }
             notes := strings.Join(mensa.Emojify(meal.Notes), ", ")
-            conn.Privmsgf(target, "%s [%s]", meal.Name, notes)
+            conn.Privmsgf(target, "%s [%s] [%s]", meal.Name, notes, 
+                          strings.Join(prices,","))
         }
     }
     if (strings.Contains(text, "nix")) {

@@ -18,6 +18,7 @@ type Meal struct {
     Name string
     Category string
     Notes []string
+    Prices map[string]float32
 }
 
 func (mensa *Client) Meals(canteen string, day time.Time) ([]Meal, error) {
@@ -76,14 +77,4 @@ func Emojify(notes []string) []string {
     } 
     
     return notes
-}
-
-func main() {
-    client := &Client{Address: "http://openmensa.org/api/v2"}
-    res, err := client.Meals("134", time.Now())
-    if err != nil {
-        println(err)
-    }
-    
-    fmt.Printf("%v\n", res)
 }
