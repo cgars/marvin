@@ -51,6 +51,9 @@ func (b *Bot) onPrivMessage(conn *irc.Conn, line *irc.Line) {
             conn.Privmsgf(target, "%s [%s]", meal.Name, notes)
         }
     }
+    if (strings.Contains(text, "nix")) {
+            conn.Privmsg(target, "https://youtu.be/Go4SI5ie7qE")
+        }
 }
 
 func NewBot() *Bot {
