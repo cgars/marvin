@@ -64,6 +64,8 @@ func Emojify(notes []string) []string {
         "mit Fleisch": "🍖",
         "veganes Gericht": "🌿",
         "fleischloses Gericht": "🍄",
+        "Gericht mit Rindfleisch": "🐂",
+        "Gericht mit Alkohol": "🍷",
     }   
     
     for i, note := range notes {
