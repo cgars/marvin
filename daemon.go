@@ -51,12 +51,12 @@ func (b *Bot) onPrivMessage(conn *irc.Conn, line *irc.Line) {
             for key, value := range meal.Prices {
                 if value != 0.{
                     prices = append(prices,fmt.Sprintf("%s:%.2f€",
-                                    strings.Title(key),value))
+                                    key,value))
                 }                
             }
-            notes := strings.Join(mensa.Emojify(meal.Notes), ", ")
+            notes := mensa.Emojify(strings.Join(meal.Notes, ", "))
             conn.Privmsgf(target, "%s [%s] [%s]", meal.Name, notes, 
-                          strings.Join(prices,","))
+                          mensa.Emojify(strings.Join(prices, ", ")))
         }
     }
     if (strings.Contains(text, "nix")) {

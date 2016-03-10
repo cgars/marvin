@@ -6,6 +6,7 @@ import (
     "time"
 	"io/ioutil"
 	"net/http"
+    "strings"
 )
 
 type Client struct {
@@ -59,22 +60,17 @@ func (mensa *Client) MealsForTomorrow(canteen string) ([]Meal, error) {
     return mensa.Meals(canteen, tomorrow)
 }
 
-func Emojify(notes []string) []string {
-    emojis := map[string]string {
-        "Gericht mit Schweinefleisch": "🐖",
-        "mit Fleisch": "🍖",
-        "veganes Gericht": "🌿",
-        "fleischloses Gericht": "🍄",
-        "Gericht mit Rindfleisch": "🐂",
-        "Gericht mit Alkohol": "🍷",
-    }   
+func Emojify(notes string) string {
+    repl := strings.NewReplacer(
+        "Gericht mit Schweinefleisch", "🐖",
+        "mit Fleisch", "🍖",
+        "veganes Gericht", "🌿",
+        "fleischloses Gericht", "🍄",
+        "Gericht mit Rindfleisch", "🐂",
+        "Gericht mit Alkohol", "🍷",
+        "students","♿",
+        "employees","👷",
+        "others","⛄")        
     
-    for i, note := range notes {
-        emoji, ok := emojis[note]
-        if ok {
-            notes[i] = emoji
-        }
-    } 
-    
-    return notes
+    return repl.Replace(notes)
 }
