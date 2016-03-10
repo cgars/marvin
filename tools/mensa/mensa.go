@@ -16,7 +16,7 @@ func main() {
     } 
     
     for _, meal := range meals {
-        notes := strings.Join(mensa.Emojify(meal.Notes), ", ")
+        notes := mensa.Emojify(strings.Join(meal.Notes, ", "))
         fmt.Printf("%s [%s] (%s)\n", meal.Name, meal.Category, notes)
     }
     
