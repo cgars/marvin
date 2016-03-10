@@ -4,14 +4,20 @@ import (
 	"fmt"
     "time"
 	"github.com/g-node/marvin/mensa"
-
+    "strings"
 )
 
 func main() {
     client := &mensa.Client{Address: "http://openmensa.org/api/v2"}
-    res, err := client.Meals("134", time.Now())
+    meals, err := client.Meals("134", time.Now())
     if err != nil {
         println(err)
-    }    
-    fmt.Printf("%v\n", res)
+        return
+    } 
+    
+    for _, meal := range meals {
+        notes := strings.Join(mensa.Emojify(meal.Notes), ", ")
+        fmt.Printf("%s [%s] (%s)\n", meal.Name, meal.Category, notes)
+    }
+    
 }
