@@ -70,7 +70,10 @@ func Emojify(notes string) string {
         "Gericht mit Alkohol", "🍷",
         "students","♿",
         "employees","👷",
-        "others","⛄")        
+        "others","⛄",
+        "mit Antioxidationsmittel","🍋",
+        "mit Konservierungsstoff","🐢",
+        "mit Phosphat", "PO4")        
     
     return repl.Replace(notes)
 }
