@@ -73,7 +73,7 @@ func Emojify(notes string) string {
         "others","⛄",
         "mit Antioxidationsmittel","🍋",
         "mit Konservierungsstoff","🐢",
-        "mit Phosphat", "PO4",
+        "mit Phosphat", "☠",
         "mit einer Zuckerart und Süßungsmitteln","🍯",
         "enthält eine Phenylalaninquelle","⌬")        
     
