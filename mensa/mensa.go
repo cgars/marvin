@@ -75,7 +75,8 @@ func Emojify(notes string) string {
         "mit Konservierungsstoff","🐢",
         "mit Phosphat", "☠",
         "mit einer Zuckerart und Süßungsmitteln","🍯",
-        "enthält eine Phenylalaninquelle","⌬")        
+        "enthält eine Phenylalaninquelle","⌬",
+        "mit Farbstoff","🖌")        
     
     return repl.Replace(notes)
 }
