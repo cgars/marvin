@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
     "time"
-	"github.com/g-node/marvin/mensa"
+	"github.com/G-Node/marvin/mensa"
     "strings"
 )
 
