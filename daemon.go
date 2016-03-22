@@ -84,9 +84,20 @@ func (b *Bot) HandlePullRequest(payload interface{}) {
     from := pl.PullRequest.Head.Label
     to := pl.PullRequest.Base.Label
     sender := pl.Sender.Login
-    
-    b.conn.Privmsgf("#gnode", "[%s#%d] '%s' [%s → %s] %s (%s)\n", name, number, 
-        title, from, to, action, sender)
+
+    if action == "closed" && pl.PullRequest.Merged {
+        action = "merged"
+    }
+
+    switch action {
+    case "merged":
+        b.conn.Privmsgf("#gnode", "[%s#%d] '%s' %s by %s\n", name, number,
+            title, action, pl.PullRequest.MergedBy.Login)
+
+    default:
+        b.conn.Privmsgf("#gnode", "[%s#%d] '%s' [%s → %s] %s (%s)\n", name, number,
+            title, from, to, action, sender)
+    }
 }
 
 func NewBot() *Bot {
