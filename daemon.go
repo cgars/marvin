@@ -4,6 +4,7 @@ import (
     "os"
     "crypto/tls"
     "fmt"
+    "bytes"
     "strings"
 
     irc "github.com/fluffle/goirc/client"
@@ -84,19 +85,46 @@ func (b *Bot) HandlePullRequest(payload interface{}) {
     from := pl.PullRequest.Head.Label
     to := pl.PullRequest.Base.Label
     sender := pl.Sender.Login
+    
+    b.conn.Privmsgf("#gnode", "[%s#%d] '%s' [%s → %s] %s (%s)\n", name, number, 
+        title, from, to, action, sender)
+}
 
-    if action == "closed" && pl.PullRequest.Merged {
-        action = "merged"
+func (b *Bot) HandleStatus(payload interface{}) {
+    pl := payload.(github.StatusPayload)
+    
+    state := pl.State
+    
+    if (state == "pending") {
+        return
+    }
+    
+    name := pl.Name
+    cks := pl.SHA
+    
+    comps := strings.Split(pl.Context, "/")
+    service := comps[0]
+    if len(comps) > 1 {
+        service = comps[1]
     }
 
-    switch action {
-    case "merged":
-        b.conn.Privmsgf("#gnode", "[%s#%d] '%s' %s by %s\n", name, number,
-            title, action, pl.PullRequest.MergedBy.Login)
-
-    default:
-        b.conn.Privmsgf("#gnode", "[%s#%d] '%s' [%s → %s] %s (%s)\n", name, number,
-            title, from, to, action, sender)
+    out := bytes.NewBufferString("")
+    out.WriteString(fmt.Sprintf("[%s] %.7s %s %s", name, cks, service, state))
+    
+    if state == "failure" {
+        out.WriteString(fmt.Sprintf(" [%s]", pl.TragetURL))
+    }
+    
+    if service == "coveralls" {
+        out.WriteString(" (")
+        out.WriteString(pl.Desctiption)
+        out.WriteString(")")
+    }
+    
+    out.WriteString("\n")
+    
+    if b.conn.Connected() {
+        b.conn.Privmsgf("#gnode", out.String())
     }
 }
 
@@ -136,6 +164,7 @@ func main() {
     if secret != "" {
         hook := github.New(&github.Config{Secret: secret})
         hook.RegisterEvents(b.HandlePullRequest, github.PullRequestEvent)
+        hook.RegisterEvents(b.HandleStatus, github.StatusEvent)
 
         go func() {
             port := os.Getenv("GITHUB_WEBHOOK_PORT")
