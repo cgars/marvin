@@ -3,6 +3,8 @@ package main
 import (
     "os"
     "fmt"
+    "bytes"
+    "strings"
     
     "github.com/gicmo/webhooks"
     "github.com/gicmo/webhooks/github"
@@ -12,6 +14,7 @@ import (
 func main() {
     hook := github.New(&github.Config{Secret: os.Getenv("GITHUB_WEBHOOK_SECRET")})
     hook.RegisterEvents(HandlePullRequest, github.PullRequestEvent)
+    hook.RegisterEvents(HandleStatus, github.StatusEvent)
 
     port := os.Getenv("GITHUB_WEBHOOK_PORT")
     if port == "" {
@@ -35,8 +38,44 @@ func HandlePullRequest(payload interface{}) {
     from := pl.PullRequest.Head.Label
     to := pl.PullRequest.Base.Label
     sender := pl.Sender.Login
+    cks := pl.PullRequest.Head.SHA
     
-    fmt.Printf("[%s#%d] '%s' [%s → %s] %s (%s)\n", name, number, 
+    fmt.Printf("[%s#%d] %.7s '%s' [%s → %s] %s (%s)\n", name, number, cks,
     title, from, to, action, sender)
       
+}
+
+func HandleStatus(payload interface{}) {
+    pl := payload.(github.StatusPayload)
+    
+    state := pl.State
+    
+    if (state == "pending") {
+        return
+    }
+    
+    name := pl.Name
+    cks := pl.SHA
+    
+    comps := strings.Split(pl.Context, "/")
+    service := comps[0]
+    if len(comps) > 1 {
+        service = comps[1]
+    }
+
+    out := bytes.NewBufferString("")
+    out.WriteString(fmt.Sprintf("[%s] %.7s %s %s", name, cks, service, state))
+    
+    if state == "failure" {
+        out.WriteString(fmt.Sprintf(" [%s]", pl.TragetURL))
+    }
+    
+    if service == "coveralls" {
+        out.WriteString(" (")
+        out.WriteString(pl.Desctiption)
+        out.WriteString(")")
+    }
+    
+    out.WriteString("\n")
+    print(out.String())
 }
