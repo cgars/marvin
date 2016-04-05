@@ -9,6 +9,7 @@ import (
 
     irc "github.com/fluffle/goirc/client"
     "github.com/G-Node/marvin/mensa"
+    "github.com/G-Node/marvin/quotes"
     
     "github.com/gicmo/webhooks"
     "github.com/gicmo/webhooks/github"  
@@ -68,6 +69,13 @@ func (b *Bot) onPrivMessage(conn *irc.Conn, line *irc.Line) {
     if (strings.Contains(text, "nix")) {
             conn.Privmsg(target, "https://youtu.be/Go4SI5ie7qE")
         }
+}
+
+func (b *Bot) onJoin(conn *irc.Conn, line *irc.Line) {
+    target := line.Target()
+    nick := line.Nick
+    fmt.Printf("[D] {pm}: [%s] %s\n", line.Nick, line.Text())
+    conn.Privmsgf(target, "Welcome %s! Here is some wisdom for you:\"%s\"", nick, quotes.GetRandomQuote())    
 }
 
 func (b *Bot) HandlePullRequest(payload interface{}) {
@@ -146,6 +154,7 @@ func NewBot() *Bot {
         func(conn *irc.Conn, line *irc.Line) { b.quit <- true })
         
     c.HandleFunc(irc.PRIVMSG, b.onPrivMessage)
+    c.HandleFunc(irc.JOIN, b.onJoin)
         
     return b
 }
