@@ -6,16 +6,18 @@ import (
     "fmt"
     "bytes"
     "strings"
-
+    "math/rand"
+    "time"
+    
     irc "github.com/fluffle/goirc/client"
     "github.com/G-Node/marvin/mensa"
     "github.com/G-Node/marvin/quotes"
     
     "github.com/gicmo/webhooks"
-    "github.com/gicmo/webhooks/github"  
-)
+    "github.com/gicmo/webhooks/github"
+    )
 
-type Bot struct {    
+type Bot struct {
     conn *irc.Conn
     
     quit chan bool
@@ -75,11 +77,11 @@ func (b *Bot) onJoin(conn *irc.Conn, line *irc.Line) {
     target := line.Target()
     nick := line.Nick
     fmt.Printf("[D] {pm}: [%s] %s\n", line.Nick, line.Text())
-    conn.Privmsgf(target, "Welcome %s! Here is some wisdom for you:\"%s\"", nick, quotes.GetRandomQuote())    
+    conn.Privmsgf(target, "Welcome %s! Here is some wisdom for you: \"%s\"", nick, quotes.GetRandomQuote())
 }
 
 func (b *Bot) HandlePullRequest(payload interface{}) {
-    
+
     if !b.conn.Connected() {
         return
     }
@@ -152,10 +154,10 @@ func NewBot() *Bot {
     c.HandleFunc(irc.CONNECTED, b.onConncted)
     c.HandleFunc(irc.DISCONNECTED,
         func(conn *irc.Conn, line *irc.Line) { b.quit <- true })
-        
+
     c.HandleFunc(irc.PRIVMSG, b.onPrivMessage)
     c.HandleFunc(irc.JOIN, b.onJoin)
-        
+
     return b
 }
 
@@ -167,7 +169,7 @@ func main() {
     if err := b.conn.Connect(); err != nil {
         fmt.Printf("Connection error: %s\n", err.Error())
     }
-    
+    rand.Seed(time.Now().UTC().UnixNano())
     secret := os.Getenv("GITHUB_WEBHOOK_SECRET")
     
     if secret != "" {

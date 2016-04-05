@@ -6,7 +6,7 @@ import (
  
  func GetRandomQuote() string{
      return words[rand.Intn(len(words))]
- } 
+    }
 
 var words = []string{
 "You know, of course, that the Tasmanians, who never committed adultery, are now extinct. - M. Somerset Maugham",
