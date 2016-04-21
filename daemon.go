@@ -70,13 +70,27 @@ func (b *Bot) onPrivMessage(conn *irc.Conn, line *irc.Line) {
 	if strings.Contains(text, "nix") {
 		conn.Privmsg(target, "https://youtu.be/Go4SI5ie7qE")
 	}
+
+	if strings.Contains(text, "gnode learn") {
+		idx := strings.LastIndex(text, "gnode learn")
+		err := quotes.LearnQuote(text[idx+11:])
+		if err != nil {
+			conn.Privmsg(target, "I think you ought to know I'm feeling very depressed.")
+			return
+		}
+		conn.Privmsgf(target, "I just learned smth. new!")
+	}
 }
 
 func (b *Bot) onJoin(conn *irc.Conn, line *irc.Line) {
 	target := line.Target()
 	nick := line.Nick
 	fmt.Printf("[D] {pm}: [%s] %s\n", line.Nick, line.Text())
-	conn.Privmsgf(target, "Welcome %s! Here is some wisdom for you: \"%s\"", nick, quotes.GetRandomQuote())
+	quote, err := quotes.GetRandomQuote()
+	if err != nil {
+		fmt.Println(err)
+	}
+	conn.Privmsgf(target, "Welcome %s! Did you know that %s said \"%s\"", nick, quote.Author, quote.Txt)
 }
 
 func (b *Bot) HandlePullRequest(payload interface{}) {
