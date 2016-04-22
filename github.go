@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"os"
 	"strings"
@@ -48,23 +47,22 @@ func (b *Bot) HandleStatus(payload interface{}) {
 		service = comps[1]
 	}
 
-	out := bytes.NewBufferString("")
-	out.WriteString(fmt.Sprintf("[%s] %.7s %s %s", name, cks, service, state))
+	out := Text("[%s] %.7s %s ", name, cks, service)
 
 	if state == "failure" {
-		out.WriteString(fmt.Sprintf(" [%s]", pl.TragetURL))
+		out.Fg(LightRed, "FAIL").Text(" [%s]", pl.TragetURL)
+	} else {
+		out.Fg(LightGreen, "%s", state)
 	}
 
 	if service == "coveralls" {
-		out.WriteString(" (")
-		out.WriteString(pl.Desctiption)
-		out.WriteString(")")
+		out.Text(" (%s)", pl.Desctiption)
 	}
 
-	out.WriteString("\n")
+	out.Text("\n")
 
 	if b.conn.Connected() {
-		b.conn.Privmsg("#gnode", out.String())
+		out.Send(b.conn, "#gnode")
 	}
 }
 
