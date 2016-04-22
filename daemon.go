@@ -70,7 +70,7 @@ func (b *Bot) onPrivMessage(conn *irc.Conn, line *irc.Line) {
 }
 
 func (b *Bot) postMeals(conn *irc.Conn, target string, meals []mensa.Meal, catToUse []string) {
-
+	messageFilter := strings.NewReplacer("[]", "")
 	for _, meal := range meals {
 		category := meal.Category
 		if !stringInSlice(category, catToUse) {
@@ -84,8 +84,9 @@ func (b *Bot) postMeals(conn *irc.Conn, target string, meals []mensa.Meal, catTo
 			}
 		}
 		notes := mensa.Emojify(strings.Join(meal.Notes, ", "))
-		conn.Privmsgf(target, "%s [%s] [%s]", meal.Name, notes,
+		message := fmt.Sprintf("%s [%s] [%s]", meal.Name, notes,
 			mensa.Emojify(strings.Join(prices, ", ")))
+		conn.Privmsg(target, messageFilter.Replace(message))
 	}
 }
 
