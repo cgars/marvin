@@ -47,26 +47,13 @@ func (b *Bot) onPrivMessage(conn *irc.Conn, line *irc.Line) {
 			conn.Privmsgf(target, "No milk today, my love has gone away...")
 			return
 		}
-
-		for _, meal := range meals {
-			category := meal.Category
-			if !(strings.HasPrefix(category, "Tagesgericht") ||
-				strings.HasPrefix(category, "Aktionsessen") ||
-				strings.HasPrefix(category, "Biogericht")) {
-				continue
-			}
-			var prices []string
-			for key, value := range meal.Prices {
-				if value != 0. {
-					prices = append(prices, fmt.Sprintf("%s:%.2f€",
-						key, value))
-				}
-			}
-			notes := mensa.Emojify(strings.Join(meal.Notes, ", "))
-			conn.Privmsgf(target, "%s [%s] [%s]", meal.Name, notes,
-				mensa.Emojify(strings.Join(prices, ", ")))
+		if strings.Contains(text, "beilagen") {
+			b.postMeals(conn, target, meals, []string{"Beilagen"})
+			return
 		}
+		b.postMeals(conn, target, meals, []string{"Tagesgericht", "Aktionsessen", "Biogericht"})
 	}
+
 	if strings.Contains(text, "nix") {
 		conn.Privmsg(target, "https://youtu.be/Go4SI5ie7qE")
 	}
@@ -79,6 +66,26 @@ func (b *Bot) onPrivMessage(conn *irc.Conn, line *irc.Line) {
 			return
 		}
 		conn.Privmsgf(target, "I just learned smth. new!")
+	}
+}
+
+func (b *Bot) postMeals(conn *irc.Conn, target string, meals []mensa.Meal, catToUse []string) {
+
+	for _, meal := range meals {
+		category := meal.Category
+		if !stringInSlice(category, catToUse) {
+			continue
+		}
+		var prices []string
+		for key, value := range meal.Prices {
+			if value != 0. {
+				prices = append(prices, fmt.Sprintf("%s:%.2f€",
+					key, value))
+			}
+		}
+		notes := mensa.Emojify(strings.Join(meal.Notes, ", "))
+		conn.Privmsgf(target, "%s [%s] [%s]", meal.Name, notes,
+			mensa.Emojify(strings.Join(prices, ", ")))
 	}
 }
 
@@ -149,6 +156,15 @@ func (b *Bot) HandleStatus(payload interface{}) {
 	if b.conn.Connected() {
 		b.conn.Privmsg("#gnode", out.String())
 	}
+}
+
+func stringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
 }
 
 func NewBot() *Bot {
