@@ -25,8 +25,11 @@ func (b *Bot) HandlePullRequest(payload interface{}) {
 	to := pl.PullRequest.Base.Label
 	sender := pl.Sender.Login
 
-	b.conn.Privmsgf("#gnode", "[%s#%d] '%s' [%s → %s] %s (%s)\n", name, number,
-		title, from, to, action, sender)
+	txt := Text("[").Fg(LightBlue, "%s", name).Text("#").Fg(Blue, "%d", number).Text("]")
+	txt.Text(" '%s' ", title)
+	txt.Fg(LightGrey, "[%s → %s]", from, to).Fg(Green, " %s ", action).Fg(Orange, "(%s)", sender)
+
+	txt.Send(b.conn, "#gnode")
 }
 
 func (b *Bot) HandleStatus(payload interface{}) {
@@ -58,8 +61,6 @@ func (b *Bot) HandleStatus(payload interface{}) {
 	if service == "coveralls" {
 		out.Text(" (%s)", pl.Desctiption)
 	}
-
-	out.Text("\n")
 
 	if b.conn.Connected() {
 		out.Send(b.conn, "#gnode")
