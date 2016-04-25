@@ -46,7 +46,8 @@ func (b *Bot) onPrivMessage(conn *irc.Conn, line *irc.Line) {
 			b.postMeals(conn, target, meals, []string{"Beilagen"})
 			return
 		}
-		b.postMeals(conn, target, meals, []string{"Tagesgericht", "Aktionsessen", "Biogericht"})
+		b.postMeals(conn, target, meals, []string{"Tagesgericht", "Aktionsessen", "Biogericht", "Aktion"})
+		return
 	}
 
 	if strings.Contains(text, "nix") {
@@ -98,7 +99,7 @@ func (b *Bot) onJoin(conn *irc.Conn, line *irc.Line) {
 
 func stringInSlice(a string, list []string) bool {
 	for _, b := range list {
-		if b == a {
+		if strings.Contains(a, b) {
 			return true
 		}
 	}
