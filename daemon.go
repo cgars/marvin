@@ -46,7 +46,8 @@ func (b *Bot) onPrivMessage(conn *irc.Conn, line *irc.Line) {
 			b.postMeals(conn, target, meals, []string{"Beilagen"})
 			return
 		}
-		b.postMeals(conn, target, meals, []string{"Tagesgericht", "Aktionsessen", "Biogericht"})
+		b.postMeals(conn, target, meals, []string{"Tagesgericht", "Aktionsessen", "Biogericht", "Aktion"})
+		return
 	}
 
 	if strings.Contains(text, "nix") {
@@ -65,7 +66,7 @@ func (b *Bot) onPrivMessage(conn *irc.Conn, line *irc.Line) {
 }
 
 func (b *Bot) postMeals(conn *irc.Conn, target string, meals []mensa.Meal, catToUse []string) {
-
+	messageFilter := strings.NewReplacer("[]", "")
 	for _, meal := range meals {
 		category := meal.Category
 		if !stringInSlice(category, catToUse) {
@@ -79,8 +80,9 @@ func (b *Bot) postMeals(conn *irc.Conn, target string, meals []mensa.Meal, catTo
 			}
 		}
 		notes := mensa.Emojify(strings.Join(meal.Notes, ", "))
-		conn.Privmsgf(target, "%s [%s] [%s]", meal.Name, notes,
+		message := fmt.Sprintf("%s [%s] [%s]", meal.Name, notes,
 			mensa.Emojify(strings.Join(prices, ", ")))
+		conn.Privmsg(target, messageFilter.Replace(message))
 	}
 }
 
@@ -97,7 +99,7 @@ func (b *Bot) onJoin(conn *irc.Conn, line *irc.Line) {
 
 func stringInSlice(a string, list []string) bool {
 	for _, b := range list {
-		if b == a {
+		if strings.Contains(a, b) {
 			return true
 		}
 	}
