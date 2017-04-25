@@ -28,8 +28,11 @@ func (b *Bot) HandlePullRequest(payload interface{}) {
 	txt := Text("[").Fg(LightBlue, "%s", name).Text("#").Fg(Blue, "%d", number).Text("]")
 	txt.Text(" '%s' ", title)
 	txt.Fg(LightGrey, "[%s → %s]", from, to).Fg(Green, " %s ", action).Fg(Orange, "(%s)", sender)
-
-	txt.Send(b.conn, "#gnode")
+	channel := os.Getenv("MARVIN_CHANNEL")
+	if channel ==""{
+		channel = "#gnode"
+	}
+	txt.Send(b.conn, channel)
 }
 
 func (b *Bot) HandleStatus(payload interface{}) {
@@ -63,7 +66,11 @@ func (b *Bot) HandleStatus(payload interface{}) {
 	}
 
 	if b.conn.Connected() {
-		out.Send(b.conn, "#gnode")
+		channel := os.Getenv("MARVIN_CHANNEL")
+		if channel ==""{
+			channel = "#gnode"
+		}
+		out.Send(b.conn, channel)
 	}
 }
 

@@ -10,6 +10,7 @@ import (
 	"github.com/G-Node/marvin/mensa"
 	"github.com/G-Node/marvin/quotes"
 	irc "github.com/fluffle/goirc/client"
+	"os"
 )
 
 type Bot struct {
@@ -18,8 +19,12 @@ type Bot struct {
 	quit chan bool
 }
 
-func (b *Bot) onConncted(conn *irc.Conn, line *irc.Line) {
-	conn.Join("#gnode")
+func (b *Bot) onConncted(conn *irc.Conn, line *irc.Line) {os.Getenv("GITHUB_WEBHOOK_SECRET")
+	channel := os.Getenv("MARVIN_CHANNEL")
+	if channel ==""{
+		channel = "#gnode"
+	}
+	conn.Join(channel)
 }
 
 func (b *Bot) onPrivMessage(conn *irc.Conn, line *irc.Line) {
