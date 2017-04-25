@@ -73,10 +73,18 @@ func Emojify(notes string) string {
 		"mit Antioxidationsmittel", "🍋",
 		"mit Konservierungsstoff", "🐢",
 		"mit Süßungsmitteln", "🍯",
+		"mit Süßungsmittel", "🍯",
 		"mit Phosphat", "☠",
 		"mit einer Zuckerart und Süßungsmitteln", "🍯",
 		"enthält eine Phenylalaninquelle", "⌬",
-		"mit Farbstoff", "🖌")
+		"mit Farbstoff", "🖌",
+		"Knoblauch", "☣",
+		"Schweinefleisch","🐖",
+		"Milch und Laktose","🍼+☠",
+		"Hühnerei","🐣",
+		"Glutenhaltiges Getreide","🌾+☠️",
+		"Weizen","🌾",
+		"Soja","🙈")
 
 	return repl.Replace(notes)
 }
