@@ -55,10 +55,6 @@ func (b *Bot) onPrivMessage(conn *irc.Conn, line *irc.Line) {
 		return
 	}
 
-	if strings.Contains(text, "nix") {
-		conn.Privmsg(target, "https://youtu.be/Go4SI5ie7qE")
-	}
-
 	if strings.Contains(text, "gnode learn") {
 		idx := strings.LastIndex(text, "gnode learn")
 		err := quotes.LearnQuote(text[idx+11:])
