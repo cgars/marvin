@@ -80,11 +80,19 @@ func Emojify(notes string) string {
 		"mit Farbstoff", "🖌",
 		"Knoblauch", "☣",
 		"Schweinefleisch","🐖",
-		"Milch und Laktose","🍼+☠",
+		"Milch und Laktose","🍼☠",
 		"Hühnerei","🐣",
-		"Glutenhaltiges Getreide","🌾+☠️",
+		"Glutenhaltiges Getreide","🌾☠️",
 		"Weizen","🌾",
-		"Soja","🙈")
+		"Soja","🙈",
+		"Rindfleisch","🐄",
+		"Erdnuss","🐘🌰",
+		"Haselnüsse","🌋🌰",
+		"Mandel","😱🌰",
+		"Walnüsse","🐳🌰",
+		"Schalenfrüchte","🌰",
+		"Kakaohaltige Fettglasur","🍫",
+		"Fisch","🐟")
 
 	return repl.Replace(notes)
 }
