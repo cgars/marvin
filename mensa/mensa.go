@@ -88,13 +88,15 @@ func Emojify(notes string) string {
 		"Rindfleisch", "🐄",
 		"Erdnuss", "🐘🌰",
 		"Haselnüsse", "🌋🌰",
+		"Mandeln", "😱🌰",
 		"Mandel", "😱🌰",
 		"Walnüsse", "🐳🌰",
 		"Schalenfrüchte", "🌰",
 		"Kakaohaltige Fettglasur", "🍫",
 		"kakaohaltige Fettglasur", "🍫",
 		"Fisch", "🐟",
-		"Alkohol", "🍺")
+		"Alkohol", "🍺",
+		"Sellerie", "芹")
 
 	return repl.Replace(notes)
 }
