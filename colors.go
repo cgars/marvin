@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"strconv"
 
 	irc "github.com/fluffle/goirc/client"
 )
@@ -55,7 +54,8 @@ func (b *TextBuffer) Text(format string, args ...interface{}) *TextBuffer {
 
 func (b *TextBuffer) Fg(c ColorCode, format string, args ...interface{}) *TextBuffer {
 	b.buf.WriteRune(cPref)
-	b.buf.WriteString(strconv.Itoa(int(c)))
+	ccStr := fmt.Sprintf("%02d", int(c))
+	b.buf.WriteString(ccStr)
 	b.Text(format, args...)
 	b.buf.WriteRune(cPref)
 	b.maybeFinishClosing()
