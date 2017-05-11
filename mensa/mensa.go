@@ -96,7 +96,11 @@ func Emojify(notes string) string {
 		"kakaohaltige Fettglasur", "🍫",
 		"Fisch", "🐟",
 		"Alkohol", "🍺",
-		"Sellerie", "芹")
+		"Sellerie", "芹",
+		"Schwefeldioxid und Sulfite", "🌋",
+		"geschwärzt", "■",
+		"Gelatine", "🐖♲",
+		"Geprüfte Qualität Bayern", "✓")
 
 	return repl.Replace(notes)
 }
